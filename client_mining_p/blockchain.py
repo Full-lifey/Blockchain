@@ -103,7 +103,7 @@ def mine():
     # Get last block in chain
     last_block = blockchain.last_block
     # if missing proof or id in block reject with 400 error
-    if not block.proof or not block.index:
+    if not block.proof or not block.id:
         return jsonify({"message": "no proof present in block"}), 400
     # Check if block has valid proof of work
     # stringify block
