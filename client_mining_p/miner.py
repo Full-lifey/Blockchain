@@ -51,9 +51,9 @@ if __name__ == '__main__':
     print("ID is", id)
     f.close()
 
+    coins = 0
     # Run forever until interrupted
     while True:
-        coins = 0
         r = requests.get(url=node + "/last_block")
         # Handle non-json response
         try:
@@ -65,6 +65,7 @@ if __name__ == '__main__':
             break
 
         # TODO: Get the block from `data` and use it to look for a new proof
+        print(data)
         new_proof = proof_of_work(data)
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
@@ -78,6 +79,6 @@ if __name__ == '__main__':
         # print the message from the server.
         if data == {'message': 'New Block Forged'}:
             coins += 1
-            print(data)
+            print(f"current coins: {coins}")
         else:
             print(data)

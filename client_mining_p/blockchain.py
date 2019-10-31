@@ -103,16 +103,17 @@ def mine():
     # Get last block in chain
     last_block = blockchain.last_block
     # if missing proof or id in block reject with 400 error
-    if not block.proof or not block.id:
+    if not block['proof'] or not block['id']:
         return jsonify({"message": "no proof present in block"}), 400
     # Check if block has valid proof of work
     # stringify block
-    string_block = json.dumps(block, sort_keys=True).encode()
-    if block.previous_hash == last_block.hash() and blockchain.valid_proof(string_block, block.proof):
-        blockchain.new_block(block, block.previous_hash)
-        return jsonify({"message": 'New Block Forged'})
+    string_last_block = json.dumps(last_block, sort_keys=True).encode()
+    if blockchain.valid_proof(string_last_block, block['proof']):
+        prev_hash = blockchain.hash(last_block)
+        blockchain.new_block(block['proof'], prev_hash)
+        return jsonify({"message": 'New Block Forged'}), 200
     else:
-        return jsonify({"message": "No valid proof for submitted block"})
+        return jsonify({"message": "No valid proof for submitted block"}), 200
     # Run the proof of work algorithm to get the next proof
     # proof = blockchain.proof_of_work(blockchain.last_block)
     # Forge the new Block by adding it to the chain with the proof
