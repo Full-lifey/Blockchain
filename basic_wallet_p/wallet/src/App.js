@@ -22,19 +22,21 @@ function App() {
 
   const checkBalance = () => {
     let currentBalance = 0;
+    let idTransactions = [];
     blockchain.forEach(block => {
       block.transactions.forEach(transaction => {
         console.log(transaction);
         if (transaction.recipient === id) {
           currentBalance += transaction.amount;
-          setUserTransactions([...userTransactions, transaction]);
+          idTransactions.push(transaction);
         } else if (transaction.sender === id) {
           currentBalance -= transaction.amount;
-          setUserTransactions([...userTransactions, transaction]);
+          idTransactions.push(transaction);
         }
       });
     });
     setBalance(currentBalance);
+    setUserTransactions(idTransactions);
   };
 
   return (
@@ -50,7 +52,11 @@ function App() {
       <button onClick={() => checkBalance()}>Set ID</button>
       <h3>Balance: {balance}</h3>
       {userTransactions.map((transaction, index) => {
-        return <div key={index}>{`transaction #: ${index + 1}`}</div>;
+        return (
+          <div key={index}>{`transaction #: ${index + 1}, sender: ${
+            transaction.sender
+          }, recipient: ${transaction.recipient}`}</div>
+        );
       })}
     </div>
   );
